@@ -1,0 +1,32 @@
+Churchill, 101, 321
+Saint Boniface, 50, 98
+Moncton, 67, 89
+Happy Valley, 678, 978
+Rimouski, 21, 54
+Whitehorse, 900, 811
+Sarnia-Clearwater, 39, 81
+Scarborough, 12, 14
+Flin Flon, 986, 956
+Thompson, 463, 87
+Chatham-Kent, 765, 957
+Gatineau, 65, 87
+Oshawa, 5, 7
+Inuvik, 45, 34
+Brampton, 56, 78
+Woodstock, 98, 100
+Batoche, 56, 78
+Yarmouth, 34, 21
+Moose Jaw, 23, 78
+Elliot Lake, 89, 100
+Port Hawkesbury, 200, 256
+Springhill, 123, 456
+Edmonton, 587, 967
+Medicine Hat, 127, 89
+Mississauga, 897, 965
+Quebec, 342, 465
+Borden, 43, 12
+Cranbrook, 16, 34
+Esquimalt, 16, 72
+Cambridge, 6, 78
+Kenora, 99, 100
+Gasp, 78, 657
