@@ -6,6 +6,9 @@
 #define GENETICALGORITHM_TOUR_HPP
 
 #include <vector>
+#include <algorithm>
+#include <random>
+#include <chrono>
 #include "City.hpp"
 
 class Tour {
@@ -16,9 +19,20 @@ class Tour {
 
 public:
 
+    Tour();
+
     void addToTour(City city);
 
     void shuffle();
+
+    void printTour();
+
+    void printPtrs();
+
+    void loadPtrs();
+
+    bool ifGenerated(vector<int> generated, int rand);
+
 };
 
 

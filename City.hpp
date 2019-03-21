@@ -12,14 +12,21 @@ using namespace std;
 
 class City {
 
-    const static string cityNames[];
     string name;
     double x;   //between 0 and 1000
     double y;   //between 0 and 1000
 
 public:
+
+    City();
+
     City(string name, int x, int y);
 
+    string getName(){ return name; }
+
+    double getX() { return x; }
+
+    double getY() { return y; }
 
 };
 

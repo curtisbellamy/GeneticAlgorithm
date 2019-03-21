@@ -14,3 +14,5 @@ City::City(string name, int x, int y) : name(name), x(x), y(y) {
         exit(1);
     }
 }
+
+City::City() {}
