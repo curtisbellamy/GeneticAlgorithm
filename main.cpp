@@ -28,6 +28,7 @@ int main() {
     cout << endl;
     tour.shuffle();
     tour.printPtrs();
+    tour.calcFitness();
 
 
 

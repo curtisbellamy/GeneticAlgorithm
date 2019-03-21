@@ -62,3 +62,18 @@ bool Tour::ifGenerated(vector<int> generated, int rand) {
     }
     return false;
 }
+
+void Tour::calcFitness() {
+    vector<City *>::iterator it1;
+    vector<City *>::iterator it2;
+    double fitnessSum = 0;
+    for (it1 = pointerList.begin(), it2 = pointerList.begin() + 1; it2 != pointerList.end(); ++it1, ++it2) {
+        City * p = *it1;
+        City * p2 = *it2;
+        double xDiff{abs(p->getX() - p2->getX())};
+        double yDiff{abs(p->getY() - p2->getY())};
+        double diffSum = xDiff + yDiff;
+        fitnessSum += diffSum;
+    }
+    cout << fitnessSum << endl;
+}

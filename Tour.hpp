@@ -33,6 +33,8 @@ public:
 
     bool ifGenerated(vector<int> generated, int rand);
 
+    void calcFitness();
+
 };
 
 
