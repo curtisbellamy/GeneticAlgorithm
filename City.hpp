@@ -20,13 +20,18 @@ public:
 
     City();
 
-    City(string name, int x, int y);
+    City(string name);
 
     string getName(){ return name; }
 
     double getX() { return x; }
 
     double getY() { return y; }
+
+    friend bool operator==(City &lhs, City& rhs);
+
+    friend bool operator!=(City &lhs, City& rhs);
+
 
 };
 

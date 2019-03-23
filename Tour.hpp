@@ -16,12 +16,18 @@ class Tour {
     double fitnessRating;
     vector<City> masterList;
     vector<City *> pointerList;
+    int ID;
+    static int counter;
 
 public:
 
     Tour();
 
     void addToTour(City city);
+
+    void addToBackOfTour(City city, int n);
+
+    void addToTourAtIndex(City city, int n);
 
     void shuffle();
 
@@ -31,9 +37,20 @@ public:
 
     void loadPtrs();
 
-    bool ifGenerated(vector<int> generated, int rand);
-
     void calcFitness();
+
+    int getID() { return ID; }
+
+    double getFitnessRating() { return fitnessRating; }
+
+    City& getCity(int n);
+
+    void addToPointerList(City &city, int i);
+
+    double calcDistance(City * p1, City * p2);
+
+    vector<City> getMasterList() { return masterList; }
+
 
 };
 

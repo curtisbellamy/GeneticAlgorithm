@@ -3,32 +3,40 @@
 #include <sstream>
 #include "City.hpp"
 #include "Tour.hpp"
+#include "Population.hpp"
 
 int main() {
-    Tour tour;
 
-    ifstream infile;
-    infile.open("../Cities.txt");
-    if(!infile.is_open()){
-        cerr << "Unable to open file." << endl;
-        exit(1);
-    } else {
+    Population population;
 
-        string line, name;
-        double x, y;
-        while(infile >> name >> x >> y){
+    for (int i = 0; i < 30; ++i) {
 
-            City newCity(name, x, y);
-            tour.addToTour(newCity);
+        Tour tour;
+
+        ifstream infile;
+        infile.open("../Cities.txt");
+        if (!infile.is_open()) {
+            cerr << "Unable to open file." << endl;
+            exit(1);
+        } else {
+
+            string line, name;
+            while (infile >> name) {
+
+                City newCity(name);
+                tour.addToTour(newCity);
+            }
+            population.addToPopulation(tour);
+
         }
     }
 
-    tour.loadPtrs();
-    tour.printTour();
-    cout << endl;
-    tour.shuffle();
-    tour.printPtrs();
-    tour.calcFitness();
+    population.shuffleTours();
+    population.algorithm();
+
+
+
+
 
 
 

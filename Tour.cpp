@@ -4,14 +4,21 @@
 
 #include <random>
 #include <chrono>
+#include <iomanip>
 #include "Tour.hpp"
 
-Tour::Tour() {
+int Tour::counter = 0;
 
+Tour::Tour() {
+    ID = counter++;
 }
 
 void Tour::addToTour(City city) {
     masterList.push_back(city);
+}
+
+void Tour::addToTourAtIndex(City city, int n) {
+    masterList[n] = city;
 }
 
 void Tour::shuffle() {
@@ -32,14 +39,14 @@ void Tour::shuffle() {
 
 void Tour::printTour() {
     for (int i = 0; i < masterList.size(); ++i) {
-        cout << masterList[i].getName() << ", " << masterList[i].getY() << ", " << masterList[i].getY() << endl;
+        cout << masterList[i].getName() << ", " << fixed << setprecision(2) <<  masterList[i].getX() << ", " << masterList[i].getY() << endl;
     }
 }
 
 void Tour::printPtrs() {
 
     for (int i = 0; i < pointerList.size(); ++i) {
-        cout << pointerList[i]->getName() << ", " << pointerList[i]->getX() << ", " << pointerList[i]->getY() << endl;
+        cout << pointerList[i]->getName() << ", " << fixed << setprecision(2) << pointerList[i]->getX() << ", " << pointerList[i]->getY() << endl;
     }
 }
 
@@ -55,25 +62,37 @@ void Tour::loadPtrs() {
     }
 }
 
-bool Tour::ifGenerated(vector<int> generated, int rand) {
-    for (int i = 0; i < generated.size(); ++i) {
-        if(generated[i] == rand)
-            return true;
-    }
-    return false;
-}
 
 void Tour::calcFitness() {
     vector<City *>::iterator it1;
     vector<City *>::iterator it2;
-    double fitnessSum = 0;
+    double fitnessSum = 0.0;
     for (it1 = pointerList.begin(), it2 = pointerList.begin() + 1; it2 != pointerList.end(); ++it1, ++it2) {
-        City * p = *it1;
+        City * p1 = *it1;
         City * p2 = *it2;
-        double xDiff{abs(p->getX() - p2->getX())};
-        double yDiff{abs(p->getY() - p2->getY())};
-        double diffSum = xDiff + yDiff;
-        fitnessSum += diffSum;
+        fitnessSum += distance(p1, p2);
     }
-    cout << fitnessSum << endl;
+    size_t index = pointerList.size() - 1;
+    fitnessSum += calcDistance(pointerList[0], pointerList[index]);
+    fitnessSum = (1/fitnessSum) * 1000;
+    fitnessRating = fitnessSum;
+}
+
+
+City& Tour::getCity(int n) {
+    return *pointerList[n];
+}
+
+double Tour::calcDistance(City *p1, City *p2) {
+    double distance;
+    double xDiff{pow(p2->getX() - p1->getX(), 2)};
+    double yDiff{pow(p2->getY() - p1->getY(), 2)};
+    distance = sqrt(xDiff + yDiff);
+    return distance;
+
+}
+
+void Tour::addToBackOfTour(City city, int n) {
+    auto it = masterList.begin() + n;
+    masterList.insert(it, 1, city);
 }
