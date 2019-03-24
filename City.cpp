@@ -6,7 +6,7 @@
 #include "City.hpp"
 
 std::default_random_engine generator;
-std::uniform_real_distribution<double> distribution(0.0,1000.0);
+std::uniform_real_distribution<double> distribution(0.0, 1000.0);
 
 City::City(string name) : name(name) {
 

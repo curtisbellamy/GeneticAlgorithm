@@ -6,11 +6,17 @@
 #define GENETICALGORITHM_POPULATION_HPP
 
 #include "Tour.hpp"
+#include <algorithm>
 
 using namespace std;
 
 class Population {
     vector<Tour> populationList;
+    const int POPULATION_SIZE = 30;
+    const int SHUFFLES = 64;
+    const int ITERATIONS = 1000;
+    const int MUTATION_RATE = 15;
+    const int CITIES_IN_TOUR = 32;
 
 
 public:
@@ -29,6 +35,8 @@ public:
     bool mergeConflict(vector<City> vec, City& city);
 
     Tour chooseCandidate(int n);
+
+    void mutate(Tour& tour);
 
 
 };

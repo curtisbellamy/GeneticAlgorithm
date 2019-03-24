@@ -38,12 +38,6 @@ void Tour::shuffle() {
 }
 
 void Tour::printTour() {
-    for (int i = 0; i < masterList.size(); ++i) {
-        cout << masterList[i].getName() << ", " << fixed << setprecision(2) <<  masterList[i].getX() << ", " << masterList[i].getY() << endl;
-    }
-}
-
-void Tour::printPtrs() {
 
     for (int i = 0; i < pointerList.size(); ++i) {
         cout << pointerList[i]->getName() << ", " << fixed << setprecision(2) << pointerList[i]->getX() << ", " << pointerList[i]->getY() << endl;
@@ -95,4 +89,17 @@ double Tour::calcDistance(City *p1, City *p2) {
 void Tour::addToBackOfTour(City city, int n) {
     auto it = masterList.begin() + n;
     masterList.insert(it, 1, city);
+}
+
+Tour& Tour::operator=(Tour rhs) {
+    mySwap(*this, rhs);
+    return *this;
+}
+
+void mySwap(Tour &first, Tour &second) {
+    using std::swap;
+    swap(first.fitnessRating, second.fitnessRating);
+    swap(first.masterList, second.masterList);
+    swap(first.pointerList, second.pointerList);
+    swap(first.ID, second.ID);
 }

@@ -12,7 +12,6 @@
 #include "City.hpp"
 
 class Tour {
-
     double fitnessRating;
     vector<City> masterList;
     vector<City *> pointerList;
@@ -22,6 +21,8 @@ class Tour {
 public:
 
     Tour();
+
+    Tour(const Tour& tour) : fitnessRating(tour.fitnessRating), masterList(tour.masterList), pointerList(tour.pointerList), ID(tour.ID) {}
 
     void addToTour(City city);
 
@@ -33,8 +34,6 @@ public:
 
     void printTour();
 
-    void printPtrs();
-
     void loadPtrs();
 
     void calcFitness();
@@ -45,11 +44,17 @@ public:
 
     City& getCity(int n);
 
-    void addToPointerList(City &city, int i);
-
     double calcDistance(City * p1, City * p2);
 
     vector<City> getMasterList() { return masterList; }
+
+    Tour& operator=(Tour rhs);
+
+    ~Tour() {}
+
+    friend void mySwap(Tour& first, Tour& second);
+
+
 
 
 };
