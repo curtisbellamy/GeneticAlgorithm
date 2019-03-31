@@ -4,20 +4,18 @@
 
 #include "Population.hpp"
 
-
 void Population::addToPopulation(Tour tour) {
     populationList.push_back(tour);
 }
 
 void Population::printPopulation() {
-    for (int i = 0; i < POPULATION_SIZE; ++i) {
+    for (int i = 0; i < populationList.size(); ++i) {
         cout << populationList[i].getID() << " " << populationList[i].getFitnessRating() << endl;
     }
 }
 
 void Population::shuffleTours() {
-    for (int i = 0; i < POPULATION_SIZE; ++i) {
-        populationList[i].loadPtrs();
+    for (int i = 0; i < populationList.size(); ++i) {
         populationList[i].shuffle();
         populationList[i].calcFitness();
     }
@@ -26,71 +24,128 @@ void Population::shuffleTours() {
 void Population::algorithm() {
     static std::default_random_engine generator2( std::random_device{}() );
     static std::uniform_int_distribution<int> distribution2(1, 25);
+
+    static std::default_random_engine generator3( std::random_device{}() );
+    static std::uniform_int_distribution<int> distribution3(1, 100);
+
+    cout << "Original population: " << endl;
+    printPopulation();
     shiftElite();
     vector<Tour> crosses;
 
-    int index1 = distribution2(generator2);
-    int index2 = distribution2(generator2);
+    cout << endl << endl;
 
-    crosses.push_back(populationList[0]);
+    cout << "First elite shifted: " << endl;
+    printPopulation();
+
+    cout << endl << endl;
+
+    Tour elite = calcBestFit();
+
+    cout << "Elite tour ID: " << elite.getID() << endl << "Fitness Rating: " << elite.getFitnessRating() << endl;
+
+    cout << endl << endl;
+
+    cout << "Population before breed: " << endl;
+    printPopulation();
+    cout << endl << endl;
 
     for (int i = 0; i < POPULATION_SIZE - 1; ++i) {
+        int index1 = distribution2(generator2);
+        int index2 = distribution2(generator2);
         Tour parent1 = chooseCandidate(index1);
         Tour parent2 = chooseCandidate(index2);
         Tour child = breed(parent1, parent2);
         crosses.push_back(child);
     }
 
-//    vector<Tour>::iterator it1;
-//    vector<Tour>::iterator it2;
-//    for (it1 = populationList.begin() + 1, it2 = crosses.begin(); it2 != crosses.end()/*it1 != populationList.end()*/; ++it1, ++it2) {
-//        populationList.insert(it1, it2, it2);
-//    }
 
-    populationList = crosses;
+    for (int k = 0; k < crosses.size(); ++k) {
+        crosses[k].shuffle();
+        crosses[k].calcFitness();
+    }
 
-    //printPopulation();
+    populationList.clear();
+    populationList.push_back(elite);
+    for (int l = 0; l < crosses.size(); ++l) {
+        populationList.push_back(crosses[l]);
+    }
+
+    cout << "Population after breed: " << endl;
+    printPopulation();
     cout << endl;
-    //mutate();
+    cout << endl;
+
+    // each tour has a 40% chance of mutating
+    int mutationChance = 40;
+    int counter = 0;
+
+    for (int j = 1; j < populationList.size(); ++j) {
+        int mutation = distribution3(generator3);
+        if(mutation < mutationChance){
+            counter++;
+            mutate(populationList[j]);
+            populationList[j].calcFitness();
+        }
+    }
+
+    cout << "Pop after mutation: " << endl;
+    printPopulation();
+    cout << endl;
+    cout << endl;
+
+    for (int m = 1; m < populationList.size(); ++m) {
+        populationList[m].calcFitness();
+    }
+
+
+    cout << "Pop after mutation after fitness calculated: " << endl;
+    printPopulation();
+    cout << endl;
+    cout << endl;
+
+    cout << "Number of mutations: " << counter << endl;
+    cout << endl << endl;
+
+    shiftElite();
+
+    cout << endl;
+    cout << "Pop after mutation and elite shifted again: " << endl;
+    printPopulation();
+    cout << endl;
+    cout << endl;
+    crosses.clear();
 
 }
 
 void Population::shiftElite() {
-    Tour elite = populationList[0];
-    int eliteIndex = 0;
-    double minFitness = elite.getFitnessRating();
-    for (int i = 0; i < POPULATION_SIZE; ++i) {
-        if(populationList[i].getFitnessRating() < minFitness) {
-            elite = populationList[i];
-            minFitness = populationList[i].getFitnessRating();
-            eliteIndex = i;
-        }
-    }
-    swap(populationList[0], populationList[eliteIndex]);
+    Tour elite = calcBestFit();
+    int index = getIndex(elite);
+    iter_swap(populationList.begin(), populationList.begin() + index);
 }
+
 
 Tour Population::breed(Tour &t1, Tour &t2) {
     Tour child;
+    vector<City> temp;
 
     static std::default_random_engine generator2( std::random_device{}() );
     static std::uniform_int_distribution<int> distribution2(0, 31);
 
 
     int index = distribution2(generator2);
-    int counter = index;
 
     for (int i = 0; i < index; ++i) {
-        child.addToTour(t1.getCity(i));
+        temp.push_back(t1.getCity(i));
     }
 
     for (int j = 0; j < 32; ++j) {
-        if(!(mergeConflict(child.getMasterList(), t2.getCity(j)))){
-            child.addToBackOfTour(t2.getCity(j), counter++);
+        if(!(mergeConflict(temp, t2.getCity(j)))){
+            temp.push_back(t2.getCity(j));
         }
     }
-    child.loadPtrs();
-    child.shuffle();
-    child.calcFitness();
+
+    child.setMasterList(temp);
     return child;
 
 }
@@ -120,19 +175,38 @@ Tour Population::chooseCandidate(int n) {
     return bestFit;
 }
 
-void Population::mutate(Tour& tour) {
+void Population::mutate(Tour tour) {
     static std::default_random_engine generator2( std::random_device{}() );
     static std::uniform_int_distribution<int> distribution2(1, 100);
 
-    tour.printTour();
-    cout << endl;
-    for(int i = 0, j = 1; i < CITIES_IN_TOUR; i++, j++){
+    for(int i = 0, j = 1; j < CITIES_IN_TOUR; i++, j++){
         int mutationRate = distribution2(generator2);
         if(mutationRate < MUTATION_RATE){
             std::swap(tour.getCity(i), tour.getCity(j));
         }
-
     }
 
-    tour.printTour();
+
+
+}
+
+Tour Population::calcBestFit() {
+    Tour bestFit = populationList[0];
+    double bestFitness = populationList[0].getFitnessRating();
+    for (int i = 0; i < populationList.size(); ++i) {
+        if(populationList[i].getFitnessRating() > bestFitness){
+            bestFit = populationList[i];
+            bestFitness = populationList[i].getFitnessRating();
+        }
+    }
+    return bestFit;
+}
+
+int Population::getIndex(Tour tour) {
+    int index = 0;
+    for (int i = 0; i < populationList.size(); ++i) {
+        if(tour.getID() == populationList[i].getID())
+            index = i;
+    }
+    return index;
 }

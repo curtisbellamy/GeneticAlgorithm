@@ -13,20 +13,22 @@ using namespace std;
 class City {
 
     string name;
-    double x;   //between 0 and 1000
-    double y;   //between 0 and 1000
+    double x = 0.0;   //between 0 and 1000
+    double y = 0.0;   //between 0 and 1000
 
 public:
+//    double x = 0.0;   //between 0 and 1000
+//    double y = 0.0;   //between 0 and 1000
 
     City();
 
     City(string name);
 
-    string getName(){ return name; }
+    string getName(){ return this->name; }
 
-    double getX() { return x; }
+    double getX() { return this->x; }
 
-    double getY() { return y; }
+    double getY() { return this->y; }
 
     friend bool operator==(City &lhs, City& rhs);
 

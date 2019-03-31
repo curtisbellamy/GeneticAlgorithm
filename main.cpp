@@ -31,13 +31,12 @@ int main() {
         }
     }
 
+
     population.shuffleTours();
-    population.algorithm();
 
-
-
-
-
+    for (int j = 0; j < Population::NUM_ITERATIONS; ++j) {
+        population.algorithm();
+    }
 
 
 }
